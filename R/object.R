@@ -11,11 +11,18 @@
 object <- function(value, alias = NULL) {
   type <- obj_type(value)
 
+  if (type == "rcclass")
+    methods <- rc_methods(value)
+  else if (type == "r6class")
+    methods <- r6_methods(value)
+  else
+    methods <- NULL
+
   structure(
     list(
       alias = alias,
       value = value,
-      methods = if (type == "rcclass") rc_methods(value)
+      methods = methods
     ),
     class = c(type, "object")
   )
@@ -26,6 +33,7 @@ default_name.s4generic <- function(x) x$value@generic
 default_name.s4method <-  function(x) x$value@generic
 default_name.rcclass <-   function(x) x$value@className
 default_name.rcmethod <-  function(x) x$value@name
+default_name.r6class <- function (x) x$classname
 default_name.s3generic <- function(x) browser()
 default_name.s3method <-  function(x) attr(x$value, "s3method")
 default_name.function <-   function(x) x$alias
@@ -109,6 +117,12 @@ obj_type.MethodDefinition <- function(x) "s4method"
 obj_type.refClassRepresentation <- function(x) "rcclass"
 #' @export
 obj_type.refMethodDef <- function(x) "rcmethod"
+
+#' @export
+obj_type.r6ClassRepresentation <- function(x) "r6class"
+#' @export
+obj_type.r6MethodDef <- function(x) "r6method"
+
 
 #' @export
 obj_type.function <- function(x) "function"
