@@ -201,6 +201,11 @@ format.rcmethods_tag <- function(x, ...) {
 }
 
 #' @export
+format.r6methods_tag <- function(x, ...) {
+  describe_section("Methods", names(x$values), x$values)
+}
+
+#' @export
 format.minidesc_tag <- function(x, ...) {
   title <- switch(x$values$type,
     generic = "Methods (by class)",

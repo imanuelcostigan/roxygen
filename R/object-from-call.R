@@ -94,6 +94,10 @@ parser_setRefClass <- function(call, env, block) {
   object(value)
 }
 
+parser_R6Class <- function(call, env, block) {
+  object(eval(call, env))
+}
+
 parser_setGeneric <- function(call, env, block) {
   name <- as.character(call$name)
   value <- methods::getGeneric(name, where = env)

@@ -73,6 +73,8 @@ default_usage.s4class <- function(x) NULL
 #' @export
 default_usage.rcclass <- function(x) NULL
 
+#' @export
+default_usage.r6class <- function(x) NULL
 
 # Usage:
 # replacement, infix, regular

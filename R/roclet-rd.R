@@ -135,6 +135,7 @@ roclet_rd_one <- function(partitum, base_path, env) {
 
   add_tag(rd, process_description(partitum, base_path))
   add_tag(rd, process_methods(partitum))
+  add_tag(rd, process_r6_methods(partitum))
 
   add_tag(rd, usage_tag(partitum))
   add_tag(rd, process_param(partitum))
@@ -267,6 +268,26 @@ process_methods <- function(block) {
   new_tag("rcmethods", setNames(desc, usage))
 }
 
+process_r6_methods <- function(block) {
+  obj <- block$object
+  if (!inherits(obj, "r6class")) return()
+
+  methods <- obj$methods
+  if (is.null(obj$methods)) return()
+
+  desc <- lapply(methods, function(x) docstring(x$value))
+  usage <- vapply(methods, function(x) {
+    usage <- function_usage(attr(x$value, "r6method"), formals(x$value))
+    as.character(wrap_string(usage))
+  }, character(1))
+
+  has_docs <- !vapply(desc, is.null, logical(1))
+  desc <- desc[has_docs]
+  usage <- usage[has_docs]
+
+  new_tag("r6methods", setNames(desc, usage))
+
+}
 
 # If \code{@@examples} is provided, use that; otherwise, concatenate
 # the files pointed to by each \code{@@example}.
